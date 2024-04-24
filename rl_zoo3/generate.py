@@ -152,7 +152,9 @@ def generate_trajectories(args, save_path, n_episodes=1, atari=False, suffix='',
     # Off-policy algorithm only support one env for now
     off_policy_algos = ["qrdqn", "dqn", "ddpg", "sac", "her", "td3", "tqc"]
 
-    set_random_seed(seed)
+    seed1 = np.random.randint(2**32 - 1, dtype="int64").item()
+
+    set_random_seed(seed1)
 
     is_atari = ExperimentManager.is_atari(env_name.gym_id)
     is_minigrid = ExperimentManager.is_minigrid(env_name.gym_id)
@@ -174,20 +176,22 @@ def generate_trajectories(args, save_path, n_episodes=1, atari=False, suffix='',
 
     log_dir = args.reward_log if args.reward_log != "" else None
 
-    seed = seed + 1000
+    seed2 = np.random.randint(2**32 - 1, dtype="int64").item()
 
     env = create_test_env(
         env_name.gym_id,
         n_envs=args.n_envs,
         stats_path=maybe_stats_path,
-        seed=seed,
+        seed=seed2,
         log_dir=log_dir,
         should_render=False, #not args.no_render, ##
         hyperparams=hyperparams,
         env_kwargs=env_kwargs,
     )
 
-    kwargs = dict(seed=seed)
+    seed3 = np.random.randint(2**32 - 1, dtype="int64").item()
+
+    kwargs = dict(seed=seed3)
     if algo in off_policy_algos:
         # Dummy buffer size as we don't need memory to enjoy the trained agent
         kwargs.update(dict(buffer_size=1))
